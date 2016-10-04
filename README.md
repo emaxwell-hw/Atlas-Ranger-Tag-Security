@@ -25,3 +25,6 @@ Add atlas.feature.taxonomy.enable=true
 
 ##Step 5: Create Tag Policy Service
 Ranger -> Tag Based Policies -> + -> <cluster>_tags
+
+##Step 6: Associate tag policy service with Hive policy service
+Service Manager -> Edit Hive Servcie -> Select Tag Service -> choose tag service
