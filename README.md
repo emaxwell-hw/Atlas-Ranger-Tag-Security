@@ -163,15 +163,38 @@ Now that the tag has been created and assigned to an asset in Atlas, a policy ca
   - Overall, the policy should look like:
   
   ![Image](images/ranger-pii-tag-policy.png?raw=true)
-  
- 
+
+###Setup Table Access Policy
+- In Ranger, navigate to Access Manager -> Resource Based Policies
+- Click on the Hive policy service
+- Click `Add New Policy` 
+- Add a policy that gives access to the sample_07 table:
+  - Poicy Name: `Sample07Policy`
+  - Database: `default`
+  - Table: `sample_07`
+  - Hive Column: `*`
+  - Group: `hr`, Permissions: `select, update`
+  - Group: 'sales', Permissions: `select, update`
+  ![Image](images/hive-sample07-policy.png?raw=true)
+
+
+###Associate Tag Policy Service with Hive Policy Service
+Now that the tag based policy service has been created, the Hive policy service needs to be configured to use the tag policies.
+- Navigate to Access Manager -> Resource Based Policies 
+- Edit the Hive policy service by clicking on the gray `Edit` button next to the service name
+
+![Image](images/edit-hive-service.png?raw=true)
+
+- In the `Select Tag Service` drop down, select the name of the tag policy service created above
+
+![Image](images/hive-service-add-tags.png?raw=true)
+
+- Click `Save`
+
+##Test access to data tagged as PII
+Now that all of the policies and associations are complete, access to the tagged data componets can be tested.
+
 
 ##Step 4: Enable Taxonomy Features
 Custom application-properties
 Add atlas.feature.taxonomy.enable=true
-
-##Step 5: Create Tag Policy Service
-Ranger -> Tag Based Policies -> + -> <cluster>_tags
-
-##Step 6: Associate tag policy service with Hive policy service
-Service Manager -> Edit Hive Servcie -> Select Tag Service -> choose tag service
