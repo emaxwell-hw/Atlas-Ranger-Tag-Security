@@ -126,10 +126,45 @@ chmod 644 SchemaLayoutView.js
   
   ![Image](images/atlas-sample07-pii.png?raw=true)
 
+The salary column of the sample_07 table is now tagged as `PII` data in Atlas.
 
 ##Create Ranger Tag Policies
-Now that the tag has been created
+Now that the tag has been created and assigned to an asset in Atlas, a policy can be created in Ranger to limit access to this PII data.
+###Setup Ranger to use Tag Based Policies
+- Login to Ranger as an administrative user (`admin/admin`)
+- Navigate to Access Manager -> Tag Based Policies
 
+![Image](images/ranger-tag-policy.png?raw=true)
+
+- Click the `+` next to `Tag` to create a new tag service
+ 
+![Image](images/ranger-create-tag-service.png?raw-true)
+
+- Create a new tag service with a name <cluster_name>_tags (e.g. if the cluster name is sme-security-11, then use sme-security-11_tags as the name)
+- Click `Add`
+
+###Create a Tag Based Policy for the PII Tag
+- In Ranger, navigate to Access Manager -> Tag Based Policies
+- Select the <cluster_name>_tags service to create a tag based policy
+- Click `Add New Policy` 
+- Create a policy with the following attributes:
+  - Policy Name: `PIIPolicy`
+  - TAG: `PII`
+  - Allow conditions:
+    - Group: `hr`, Allowed Operations: `select, update` for `hive` component
+
+    ![Image](images/ranger-pii-allow-perms.png?raw=true)
+
+ - Deny conditions:
+    - Group: `sales`, Denied Operations: all for `hive` component
+    
+    ![Image](images/ranger-pii-deny-perms.png?raw=true)
+
+  - Overall, the policy should look like:
+  
+  ![Image](images/ranger-pii-tag-policy.png?raw=true)
+  
+ 
 
 ##Step 4: Enable Taxonomy Features
 Custom application-properties
