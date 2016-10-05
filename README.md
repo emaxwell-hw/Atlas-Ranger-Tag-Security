@@ -47,6 +47,7 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
     - User: `atlas`, Privileges:  `Read, Create, Admin, Write`
 
   ![Image](images/atlas-titan-policy.png?raw=true)
+  
   - Policy for ATLAS_ENTITY_AUDIT_EVENTS table:
     - User: `atlas`, Privileges:  `Read, Create, Admin, Write`
     
@@ -66,23 +67,54 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
     ![Image](images/atlas-entities-policy.png?raw=true)
 
 - Add the `hadoopadmin` user to all of the default Atlas policies in Ranger
+
 ![Image](images/ranger-atlas-policies.png?raw=true)
 
+##Import Hive Objects into Atlas
+Atlas does not import metadata for Hive tables at install time. If there are any existing Hive tables, then a script needs to be run to import those objects into the Atlas Metadata Server.
 
-
-
-
-Grant privileges to the admin user on the default Atlas policies.
-Replace the SchemaLayoutView.js file (/usr/hdp/current/atlas-server/server/webapp/atlas/js/views/schema/SchemaLayoutView.js)
-- clear browser history (or restart browser) and reload page
-
-##Step 2: Setup Authentication for Atlas
-AD configs
-
-##Step 3: Import Hive Table Information
-su - atlas
-kinit -kt /etc/security/keytabs/atlas.service.keytab atlas/ip-172-30-0-26.us-west-2.compute.internal@SEC11.HORTONWORKS.COM
+On the node where the Atlas Metadata Server is running, execute the following:
+```
+sudo -u atlas
+kinit -kt /etc/security/keytabs/atlas.service.keytab atlas/$(hostname -f)@LAB.HORTONWORKS.NET
 /usr/hdp/current/atlas-server/hook-bin/import-hive.sh
+```
+
+##Correct the ScemaLayoutView.js File
+The Atlas Metadata Server in HDP 2.5.0 ships with an incorrect version of the ScemaLayoutView.js file in the Atlas webapp structure. Replace this file and clear the browser cache to get a proper representation in the Schema tab of a table's description in Atlas.
+- Download the [link](ScemaLayoutView.js) file to the node running the Atlas Metadata Server.
+- Backup the original file and replace it with the new file
+
+```
+cd /usr/hdp/current/atlas-server/server/webapp/atlas/js/views/schema/
+mv SchemaLayoutView.js SchemaLayoutView.js.old
+mv ~/SchemaLayoutView.js ./SchemaLayoutView.js
+chown atlas:hadoop SchemaLayoutView.js
+chmod 644 SchemaLayoutView.js
+```
+
+##View Atlas Metadata and Create PII Tag
+- Login to the Atlas UI (Ambari -> Atlas -> Quick Links -> Atlas UI) as the `hadoopadmin` user
+- Find Hive tables
+  - Click on Search
+  - Move the toggle to DSL
+  - In the `Search For` box, type `hive_table` and click the Search button
+  
+  ![Image](images/atlas-table-search.png?raw=true)
+  
+  - Click on the table names and explore the Atlas UI. If the SchemaLayoutView.js was replaced properly, the `Schema` tab should show the column names for the table.
+
+- Crate a PII tag in Atlas
+  - Click on Tags
+  - Click on Create Tag
+  - Give the tag the name `PII`
+  - Give the tag the description `Private Identifiable Data`
+  - Click `Create`
+  - The new PII tag will appear below the search box
+  
+  ![Image](images/atlas-pii-tag.png?raw=true)
+
+
 
 ##Step 4: Enable Taxonomy Features
 Custom application-properties
