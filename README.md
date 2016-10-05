@@ -164,20 +164,6 @@ Now that the tag has been created and assigned to an asset in Atlas, a policy ca
   
   ![Image](images/ranger-pii-tag-policy.png?raw=true)
 
-###Setup Table Access Policy
-- In Ranger, navigate to Access Manager -> Resource Based Policies
-- Click on the Hive policy service
-- Click `Add New Policy` 
-- Add a policy that gives access to the sample_07 table:
-  - Poicy Name: `Sample07Policy`
-  - Database: `default`
-  - Table: `sample_07`
-  - Hive Column: `*`
-  - Group: `hr`, Permissions: `select, update`
-  - Group: 'sales', Permissions: `select, update`
-  ![Image](images/hive-sample07-policy.png?raw=true)
-
-
 ###Associate Tag Policy Service with Hive Policy Service
 Now that the tag based policy service has been created, the Hive policy service needs to be configured to use the tag policies.
 - Navigate to Access Manager -> Resource Based Policies 
@@ -191,10 +177,39 @@ Now that the tag based policy service has been created, the Hive policy service 
 
 - Click `Save`
 
+###Setup Table Access Policy
+Create a Hive policy in Ranger that gives both the sales and hr groups access to look at and update the sample_07 table.
+- In Ranger, navigate to Access Manager -> Resource Based Policies
+- Click on the Hive policy service
+- Click `Add New Policy` 
+- Add a policy that gives access to the sample_07 table:
+  - Poicy Name: `Sample07Policy`
+  - Database: `default`
+  - Table: `sample_07`
+  - Hive Column: `*`
+  - Group: `hr`, Permissions: `select, update`
+  - Group: 'sales', Permissions: `select, update`
+  ![Image](images/hive-sample07-policy.png?raw=true)
+
+
 ##Test access to data tagged as PII
-Now that all of the policies and associations are complete, access to the tagged data componets can be tested.
+Now that all of the policies and associations are complete, access to the tagged data componets can be tested. This can be completed either using beeline, or using the Hive View (if properly configured).
+
+###Show Access for HR Users
+The HR users should be able to see all columns in the sample_07 table since they were granted Allow permissions to the tag based policy.
+- On the node running the HiveServer, login to Hive as the hr1 user via beeline
+```
+beeline -u "jdbc:hive2://localhost:8443/;ssl=true;transportMode=http;httpPath=gateway/default/hive" -n hr1 -p BadPass#1
+```
+- Run a select on the sample_07 table. This query should complete with no errors.
+```
 
 
-##Step 4: Enable Taxonomy Features
+
+###Show Access for Sales Users
+
+
+
+##Optional: Enable Taxonomy Features in Atlas
 Custom application-properties
 Add atlas.feature.taxonomy.enable=true
