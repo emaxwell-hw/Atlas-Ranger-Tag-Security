@@ -82,7 +82,7 @@ kinit -kt /etc/security/keytabs/atlas.service.keytab atlas/$(hostname -f)@LAB.HO
 
 ##Correct the ScemaLayoutView.js File
 The Atlas Metadata Server in HDP 2.5.0 ships with an incorrect version of the ScemaLayoutView.js file in the Atlas webapp structure. Replace this file and clear the browser cache to get a proper representation in the Schema tab of a table's description in Atlas.
-- Download the [link](ScemaLayoutView.js) file to the node running the Atlas Metadata Server.
+- Download the [ScemaLayoutView.js](ScemaLayoutView.js) file to the node running the Atlas Metadata Server.
 - Backup the original file and replace it with the new file
 
 ```
