@@ -191,25 +191,65 @@ Create a Hive policy in Ranger that gives both the sales and hr groups access to
   - Group: 'sales', Permissions: `select, update`
   ![Image](images/hive-sample07-policy.png?raw=true)
 
+###Give User Groups Access to the Hive View
+- In Ambari, navigate to User Name Dropdown -> Manage Ambari -> Views -> Hive View
+- Grant permissions to the `sales` and `hr` groups to use the Hive View
+
+![Image](images/hive-view-perms.png?raw=true)
 
 ##Test access to data tagged as PII
 Now that all of the policies and associations are complete, access to the tagged data componets can be tested. This can be completed either using beeline, or using the Hive View (if properly configured).
 
 ###Show Access for HR Users
 The HR users should be able to see all columns in the sample_07 table since they were granted Allow permissions to the tag based policy.
-- On the node running the HiveServer, login to Hive as the hr1 user via beeline
+- Login to Ambari as `hr1/BadPass#1`
+- Click on `Hive View`
+- Run a query to view the data in the sample_07 table:
 ```
-beeline -u "jdbc:hive2://localhost:8443/;ssl=true;transportMode=http;httpPath=gateway/default/hive" -n hr1 -p BadPass#1
-```
-- Run a select on the sample_07 table. This query should complete with no errors.
+select * from sample_07 limit 50;
 ```
 
-
+![Image](images/hive-hr1-query-succeed.png?raw=true)
 
 ###Show Access for Sales Users
+The Sales users should be able to see all columns of the sample_07 table except the salary column.
+- Login to Ambari as `sales1/BadPass#1`
+- Click on `Hive View`
+- Run a query to view all data in the sample_07 table:
 
+```
+select * from sample_07 limit 50;
+```
+
+![Image](images/hive-sales1-query-fail.png?raw=true)
+
+- Notice that this query fails with the following error:
+
+```
+java.lang.Exception: org.apache.hive.service.cli.HiveSQLException: Error while compiling statement: FAILED: HiveAccessControlException Permission denied: user [sales1] does not have [SELECT] privilege on [default/sample_07/code,description,salary,total_emp]
+```
+
+- Run another query against the sample_07 table excluding the salary column:
+```
+select code, description, total_emp from sample_07 limit 50;
+```
+
+![Image](images/hive-sales1-query-succeed.png?raw=true)
+
+###View Ranger Audits for Tag Policy
+Ranger logs access successes and failures in the Audit trail.
+- In Ranger, navigate to Audit -> Access
+- Add a filter to see access failures for the sales1 user:
+  - Service Type: `HIVE`
+  - Result: `Denied`
+  
+  ![Image](images/ranger-sales1-denied.png?raw=true)
+
+- Remove the filter on Result to view successes
+
+  ![Image](images/ranger-sales1-allowed.png?raw=true)
 
 
 ##Optional: Enable Taxonomy Features in Atlas
-Custom application-properties
+The taxonomy features in Atlas are Technical Preview as of HDP 2.5.0. To enable these features, add a paremeter in Ambari
 Add atlas.feature.taxonomy.enable=true
