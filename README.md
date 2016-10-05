@@ -73,9 +73,14 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
 ##Import Hive Objects into Atlas
 Atlas does not import metadata for Hive tables at install time. If there are any existing Hive tables, then a script needs to be run to import those objects into the Atlas Metadata Server.
 
+Determine the node where Atlas is installed:
+```
+ps aux | grep -q "^atlas.*atlas-server" && echo "Atlas is here"
+```
+
 On the node where the Atlas Metadata Server is running, execute the following:
 ```
-sudo -u atlas
+su - atlas
 kinit -kt /etc/security/keytabs/atlas.service.keytab atlas/$(hostname -f)@LAB.HORTONWORKS.NET
 /usr/hdp/current/atlas-server/hook-bin/import-hive.sh
 ```
