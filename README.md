@@ -1,11 +1,13 @@
 #Tag Based Security with Atlas + Ranger
 ##Install Pre-requisites
+
 ###Install HBase
 Atlas uses HBase for its graph database store. If HBase is not already installed, HBase will need to be added to the cluster.
 - In Ambari, use the Add Servcie wizard to add HBase to the cluster.
 - Choose the HBase Master node and assign Region Servers to the appropriate worker nodes in the cluster.
 - Enable the HBase-Ranger plugin: Ambari -> Ranger -> Configs -> Ranger Plugin -> HBase Ranger Plugin -> On
 - Restart all neccessary components in Ambari
+
 ###Install Kafka
 Atlas uses Kafka to queue messages for tracking lineage and audit usage as well as for transferring infmriaton about assets within the environment.
 - In Ambari, use the Add Servcie wizard to add Kafka to the cluster.
