@@ -252,4 +252,27 @@ Ranger logs access successes and failures in the Audit trail.
 
 ##Optional: Enable Taxonomy Features in Atlas
 The taxonomy features in Atlas are Technical Preview as of HDP 2.5.0. To enable these features, add a paremeter in Ambari
-Add atlas.feature.taxonomy.enable=true
+- In Ambari, navigate to Atlas -> Configs -> Advanced -> Custom application-properties
+- Click `Add Property...`
+- Add `atlas.feature.taxonomy.enable` with a value of `true`
+
+![Image](images/atlas-add-tax-prop.png?raw=true)
+
+- Restart all required services
+- The Atlas UI will now have a `Taxonomy` tab
+
+![Image](images/atlas-tax-tab.png?raw=true)
+
+- Click `Taxonomy` and add terms to the Catalog
+- Associate terms with assets similarly to adding tags. Use the `Add Term` button to associate Catalog terms
+
+![Image](images/atlas-tax-term.png?raw=true)
+
+- Search for assets containing a tag:
+  - Expand the Catalog to find the term to search
+  - Click the `...` to the right of the term
+  - Select `Search Assets` to find assets that have been tagged with that term or subordinate terms
+  
+  ![Image](images/atlas-tax-search.png?raw=true)
+  
+  ![Image](images/atlas-tax-search-result.png?raw=true)
