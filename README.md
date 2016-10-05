@@ -44,9 +44,13 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
 
 - Verify the HBase policies in Rager.
   - Policy for atlas_titan table:
+    - User: `atlas`, Privileges:  `Read, Create, Admin, Write`
+
   ![Image](images/atlas-titan-policy.png?raw=true)
   - Policy for ATLAS_ENTITY_AUDIT_EVENTS table:
-  ![Image](images/atlas-audit-policy.png?raw=true)
+    - User: `atlas`, Privileges:  `Read, Create, Admin, Write`
+    
+  ![Image](images/atlas-audits-policy.png?raw=true)
 
 - Verify the Kafka policies in Ranger.
   - Policy for ATLAS_HOOK topic:
@@ -61,16 +65,11 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
 
     ![Image](images/atlas-entities-policy.png?raw=true)
 
+- Add the `hadoopadmin` user to all of the default Atlas policies in Ranger
+![Image](images/ranger-atlas-policies.png?raw=true)
 
-Enable Ranger plugin (Metadata server won't start till this is done)
-give atlas user access to kafka topics
 
-| Topic          | User/Group    | Permissions      |
-| :------------- |:-------------:| :----------------|
-| ATLAS_HOOK     | atlas         | consume, create  |
-|                | public        | publish, create  |
-| ATLAS_ENTITIES | atlas         | consume, create  |
-|                | public        | publish, create  |
+
 
 
 Grant privileges to the admin user on the default Atlas policies.
