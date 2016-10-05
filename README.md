@@ -275,4 +275,6 @@ The taxonomy features in Atlas are Technical Preview as of HDP 2.5.0. To enable 
   
   ![Image](images/atlas-tax-search.png?raw=true)
   
+  - View the results of the search
+  
   ![Image](images/atlas-tax-search-result.png?raw=true)
