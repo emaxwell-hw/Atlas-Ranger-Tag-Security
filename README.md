@@ -11,6 +11,7 @@ Atlas uses Kafka to queue messages for tracking lineage and audit usage as well 
 - In Ambari, use the Add Servcie wizard to add Kafka to the cluster.
 - Enable the Kafka-Ranger plugin: Ambari -> Ranger -> Configs -> Ranger Plugin -> Kafka Ranger Plugin -> On
 - Restart all neccessary components in Ambari
+
 ###Install Atlas
 
 
