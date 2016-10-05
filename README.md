@@ -114,6 +114,21 @@ chmod 644 SchemaLayoutView.js
   
   ![Image](images/atlas-pii-tag.png?raw=true)
 
+- Assign the PII tag to the salary column for sample_07
+  - Go back to the Atlas Search 
+  - Select the sample_07 table
+  - Browse to the Schema tab
+  
+  ![Image](images/atlas-sample07-schema.png?raw=true)
+  
+  - Click the `+` sign in the `Tags` column next to the `salary` field
+  - Select the `PII` tag from the drop down and click `Add`
+  
+  ![Image](images/atlas-sample07-pii.png?raw=true)
+
+
+##Create Ranger Tag Policies
+Now that the tag has been created
 
 
 ##Step 4: Enable Taxonomy Features
