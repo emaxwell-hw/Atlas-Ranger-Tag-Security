@@ -25,11 +25,11 @@ Once Kafka and HBase are installed and the Ranger plugins are enabled, the Atlas
   - atlas.authentication.method.ldap.ad.bind.dn: `cn=ldap-reader,ou=ServiceUsers,dc=lab,dc=hortonworks,dc=net`
   - atlas.authentication.method.ldap.ad.bind.password: `BadPass#1`
 
-![Image](images/atlas_auth_settings.png)
+![Image](images/atlas-auth-config.png?raw=true)
 
 - In the Advanced ranger-atlas-plugin-properties configuration page, check the box for Enable Ranger for Atlas
 
-![Image](images/enable_ranger_atlas.png)
+![Image](images/enable-ranger-atlas.png?raw=true)
 
 - Restart all affected services
 - Troubleshooting
@@ -39,7 +39,24 @@ Once Kafka and HBase are installed and the Ranger plugins are enabled, the Atlas
     ERROR Java::OrgApacheHadoopHbaseIpc::RemoteWithExtrasException: org.apache.hadoop.hbase.coprocessor.CoprocessorException: HTTP 400 Error: atlas is Not Found
     ```
     
+##Configure Ranger Policies
+Ranger policies must be configured to ensure that the hadoopadmin user can administer Atlas. Policies are also created when Atlas is installed for verious components (HBase, Kafka). The creation of these policies is not 100% automated, so these policies need to be verified before continuing.
 
+- Verify the HBase policies in Rager.
+  - Policy for atlas_titan table:
+  ![Image](images/atlas-titan-policy.png?raw=true)
+  - Policy for ATLAS_ENTITY_AUDIT_EVENTS table:
+  ![Image](images/atlas-audit-policy.png?raw=true)
+
+- Verify the Kafka policies in Ranger.
+  - Policy for ATLAS_HOOK topic:
+    - User: `atlas`, Privileges: `Consume, Create`
+    - Group: `public`, Privileges: `Publish, Create`
+  ![Image](images/atlas-hook-policy.png?raw=true)
+  - Policy for ATLAS_ENTITIES topic:
+    - User: `atlas`, Privileges: `Publish, Create`
+    - Group: `public`, Privileges: `Consume, Create`
+  ![Image](images/atlas-entities-policy.png?raw=true)
 
 
 Enable Ranger plugin (Metadata server won't start till this is done)
