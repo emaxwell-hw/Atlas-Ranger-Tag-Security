@@ -24,12 +24,17 @@ Once Kafka and HBase are installed and the Ranger plugins are enabled, the Atlas
   - atlas.authentication.method.ldap.ad.base.dn: `dc=lab,dc=hortonworks,dc=net`
   - atlas.authentication.method.ldap.ad.bind.dn: `cn=ldap-reader,ou=ServiceUsers,dc=lab,dc=hortonworks,dc=net`
   - atlas.authentication.method.ldap.ad.bind.password: `BadPass#1`
+
 ![Image](images/atlas_auth_settings.png)
+
 - In the Advanced ranger-atlas-plugin-properties configuration page, check the box for Enable Ranger for Atlas
+
 ![Image](images/enable_ranger_atlas.png)
+
 - Restart all affected services
 - Troubleshooting
   - Not enabling the Ranger Atlas Plugin may cause the Atlas Metadata Server to not start properly. If this happens, check the logs for the following error:
+
     ```
     ERROR Java::OrgApacheHadoopHbaseIpc::RemoteWithExtrasException: org.apache.hadoop.hbase.coprocessor.CoprocessorException: HTTP 400 Error: atlas is Not Found
     ```
