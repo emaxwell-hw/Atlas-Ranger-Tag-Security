@@ -52,11 +52,14 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
   - Policy for ATLAS_HOOK topic:
     - User: `atlas`, Privileges: `Consume, Create`
     - Group: `public`, Privileges: `Publish, Create`
-  ![Image](images/atlas-hook-policy.png?raw=true)
+
+    ![Image](images/atlas-hook-policy.png?raw=true)
+    
   - Policy for ATLAS_ENTITIES topic:
     - User: `atlas`, Privileges: `Publish, Create`
     - Group: `public`, Privileges: `Consume, Create`
-  ![Image](images/atlas-entities-policy.png?raw=true)
+
+    ![Image](images/atlas-entities-policy.png?raw=true)
 
 
 Enable Ranger plugin (Metadata server won't start till this is done)
