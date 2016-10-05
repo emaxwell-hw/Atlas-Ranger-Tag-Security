@@ -7,16 +7,13 @@ Enable Ranger plugin (Metadata server won't start till this is done)
 give atlas user access to kafka topics
 
 | Topic          | User/Group    | Permissions      |
-| :------------- |:-------------:| ----------------:|
+| :------------- |:-------------:| :----------------|
 | ATLAS_HOOK     | atlas         | consume, create  |
 |                | public        | publish, create  |
 | ATLAS_ENTITIES | atlas         | consume, create  |
 |                | public        | publish, create  |
 
 
-
-- ATLAS_ENTITIES
-- ATLAS_HOOK
 Grant privileges to the admin user on the default Atlas policies.
 Replace the SchemaLayoutView.js file (/usr/hdp/current/atlas-server/server/webapp/atlas/js/views/schema/SchemaLayoutView.js)
 - clear browser history (or restart browser) and reload page
