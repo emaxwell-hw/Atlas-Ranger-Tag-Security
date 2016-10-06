@@ -1,4 +1,7 @@
 #Tag Based Security with Atlas + Ranger
+##Tutorial pre-requisites
+This tutorial assumes that the [Security Labs](https://github.com/HortonworksUniversity/Security_Labs) have been completed.
+
 ##Install Pre-requisites
 
 ###Install HBase
