@@ -1,23 +1,23 @@
-#Tag Based Security with Atlas + Ranger
-##Tutorial pre-requisites
+# Tag Based Security with Atlas + Ranger
+## Tutorial pre-requisites
 This tutorial assumes that the [Security Labs](https://github.com/HortonworksUniversity/Security_Labs) have been completed.
 
-##Install Pre-requisites
+## Install Pre-requisites
 
-###Install HBase
+### Install HBase
 Atlas uses HBase for its graph database store. If HBase is not already installed, HBase will need to be added to the cluster.
 - In Ambari, use the Add Servcie wizard to add HBase to the cluster.
 - Choose the HBase Master node and assign Region Servers to the appropriate worker nodes in the cluster.
 - Enable the HBase-Ranger plugin: Ambari -> Ranger -> Configs -> Ranger Plugin -> HBase Ranger Plugin -> On
 - Restart all neccessary components in Ambari
 
-###Install Kafka
+### Install Kafka
 Atlas uses Kafka to queue messages for tracking lineage and audit usage as well as for transferring infmriaton about assets within the environment.
 - In Ambari, use the Add Servcie wizard to add Kafka to the cluster.
 - Enable the Kafka-Ranger plugin: Ambari -> Ranger -> Configs -> Ranger Plugin -> Kafka Ranger Plugin -> On
 - Restart all neccessary components in Ambari
 
-##Install Atlas
+## Install Atlas
 Once Kafka and HBase are installed and the Ranger plugins are enabled, the Atlas service can be installed and configured.
 - In Ambari, use the Add Servcie wizard to add Atlas to the cluster.
 - At the configuration step, set the authentication parameters for Atlas. Use the following parameter values:
@@ -42,7 +42,7 @@ Once Kafka and HBase are installed and the Ranger plugins are enabled, the Atlas
     ERROR Java::OrgApacheHadoopHbaseIpc::RemoteWithExtrasException: org.apache.hadoop.hbase.coprocessor.CoprocessorException: HTTP 400 Error: atlas is Not Found
     ```
     
-##Configure Ranger Policies
+## Configure Ranger Policies
 Ranger policies must be configured to ensure that the hadoopadmin user can administer Atlas. Policies are also created when Atlas is installed for verious components (HBase, Kafka). The creation of these policies is not 100% automated, so these policies need to be verified before continuing.
 
 - Verify the HBase policies in Rager.
@@ -73,7 +73,7 @@ Ranger policies must be configured to ensure that the hadoopadmin user can admin
 
 ![Image](images/ranger-atlas-policies.png?raw=true)
 
-##Import Hive Objects into Atlas
+## Import Hive Objects into Atlas
 Atlas does not import metadata for Hive tables at install time. If there are any existing Hive tables, then a script needs to be run to import those objects into the Atlas Metadata Server.
 
 Determine the node where Atlas is installed:
@@ -88,7 +88,7 @@ kinit -kt /etc/security/keytabs/atlas.service.keytab atlas/$(hostname -f)@LAB.HO
 /usr/hdp/current/atlas-server/hook-bin/import-hive.sh
 ```
 
-##Correct the ScemaLayoutView.js File
+## Correct the ScemaLayoutView.js File
 The Atlas Metadata Server in HDP 2.5.0 ships with an incorrect version of the ScemaLayoutView.js file in the Atlas webapp structure. Replace this file and clear the browser cache to get a proper representation in the Schema tab of a table's description in Atlas.
 - Download the [SchemaLayoutView.js](SchemaLayoutView.js) file to the node running the Atlas Metadata Server.
 - Backup the original file and replace it with the new file
@@ -101,7 +101,7 @@ chown atlas:hadoop SchemaLayoutView.js
 chmod 644 SchemaLayoutView.js
 ```
 
-##View Atlas Metadata and Create PII Tag
+## View Atlas Metadata and Create PII Tag
 - Login to the Atlas UI (Ambari -> Atlas -> Quick Links -> Atlas UI) as the `hadoopadmin` user
 - Find Hive tables
   - Click on Search
@@ -136,9 +136,9 @@ chmod 644 SchemaLayoutView.js
 
 The salary column of the sample_07 table is now tagged as `PII` data in Atlas.
 
-##Create Ranger Tag Policies
+## Create Ranger Tag Policies
 Now that the tag has been created and assigned to an asset in Atlas, a policy can be created in Ranger to limit access to this PII data.
-###Setup Ranger to use Tag Based Policies
+### Setup Ranger to use Tag Based Policies
 - Login to Ranger as an administrative user (`admin/admin`)
 - Navigate to Access Manager -> Tag Based Policies
 
@@ -151,7 +151,7 @@ Now that the tag has been created and assigned to an asset in Atlas, a policy ca
 - Create a new tag service with a name <cluster_name>_tags (e.g. if the cluster name is sme-security-11, then use sme-security-11_tags as the name)
 - Click `Add`
 
-###Create a Tag Based Policy for the PII Tag
+### Create a Tag Based Policy for the PII Tag
 - In Ranger, navigate to Access Manager -> Tag Based Policies
 - Select the <cluster_name>_tags service to create a tag based policy
 - Click `Add New Policy` 
@@ -172,7 +172,7 @@ Now that the tag has been created and assigned to an asset in Atlas, a policy ca
   
   ![Image](images/ranger-pii-tag-policy.png?raw=true)
 
-###Associate Tag Policy Service with Hive Policy Service
+### Associate Tag Policy Service with Hive Policy Service
 Now that the tag based policy service has been created, the Hive policy service needs to be configured to use the tag policies.
 - Navigate to Access Manager -> Resource Based Policies 
 - Edit the Hive policy service by clicking on the gray `Edit` button next to the service name
@@ -185,7 +185,7 @@ Now that the tag based policy service has been created, the Hive policy service 
 
 - Click `Save`
 
-###Setup Table Access Policy
+### Setup Table Access Policy
 Create a Hive policy in Ranger that gives both the sales and hr groups access to look at and update the sample_07 table.
 - In Ranger, navigate to Access Manager -> Resource Based Policies
 - Click on the Hive policy service
@@ -199,16 +199,16 @@ Create a Hive policy in Ranger that gives both the sales and hr groups access to
   - Group: 'sales', Permissions: `select, update`
   ![Image](images/hive-sample07-policy.png?raw=true)
 
-###Give User Groups Access to the Hive View
+### Give User Groups Access to the Hive View
 - In Ambari, navigate to User Name Dropdown -> Manage Ambari -> Views -> Hive View
 - Grant permissions to the `sales` and `hr` groups to use the Hive View
 
 ![Image](images/hive-view-perms.png?raw=true)
 
-##Test access to data tagged as PII
+## Test access to data tagged as PII
 Now that all of the policies and associations are complete, access to the tagged data componets can be tested. This can be completed either using beeline, or using the Hive View (if properly configured).
 
-###Show Access for HR Users
+### Show Access for HR Users
 The HR users should be able to see all columns in the sample_07 table since they were granted Allow permissions to the tag based policy.
 - Login to Ambari as `hr1/BadPass#1`
 - Click on `Hive View`
@@ -219,7 +219,7 @@ select * from sample_07 limit 50;
 
 ![Image](images/hive-hr1-query-succeed.png?raw=true)
 
-###Show Access for Sales Users
+### Show Access for Sales Users
 The Sales users should be able to see all columns of the sample_07 table except the salary column.
 - Login to Ambari as `sales1/BadPass#1`
 - Click on `Hive View`
@@ -244,7 +244,7 @@ select code, description, total_emp from sample_07 limit 50;
 
 ![Image](images/hive-sales1-query-succeed.png?raw=true)
 
-###View Ranger Audits for Tag Policy
+### View Ranger Audits for Tag Policy
 Ranger logs access successes and failures in the Audit trail.
 - In Ranger, navigate to Audit -> Access
 - Add a filter to see access failures for the sales1 user:
@@ -258,7 +258,7 @@ Ranger logs access successes and failures in the Audit trail.
   ![Image](images/ranger-sales1-allowed.png?raw=true)
 
 
-##Optional: Enable Taxonomy Features in Atlas
+## Optional: Enable Taxonomy Features in Atlas
 The taxonomy features in Atlas are Technical Preview as of HDP 2.5.0. To enable these features, add a paremeter in Ambari
 - In Ambari, navigate to Atlas -> Configs -> Advanced -> Custom application-properties
 - Click `Add Property...`
