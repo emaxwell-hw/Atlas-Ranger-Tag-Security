@@ -96,7 +96,7 @@ The Atlas Metadata Server in HDP 2.5.0 ships with an incorrect version of the Sc
 ```
 cd /usr/hdp/current/atlas-server/server/webapp/atlas/js/views/schema/
 mv SchemaLayoutView.js SchemaLayoutView.js.old
-mv ~/SchemaLayoutView.js ./SchemaLayoutView.js
+curl -O https://raw.githubusercontent.com/emaxwell-hw/Atlas-Ranger-Tag-Security/master/SchemaLayoutView.js
 chown atlas:hadoop SchemaLayoutView.js
 chmod 644 SchemaLayoutView.js
 ```
